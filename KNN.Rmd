@@ -1,0 +1,106 @@
+---
+title: "Building KNN Function"
+author: "Nouman Riaz"
+date: "October 25, 2016"
+output: pdf_document
+---
+
+#The objective is to implement KNN at 'Default' dataset from ISLR package.
+
+#### First we will load the dataset from ISLR package.
+
+```{r}
+require(ISLR)
+data("Default")
+summary(Default)
+
+```
+
+#### Now we will replace the labels by 'Yes' as '1' and 'No' as '0'
+
+```{r}
+Default$default <- as.factor(gsub("Yes","1",Default$default))
+Default$default <- as.factor(gsub("No","0",Default$default))
+```
+
+#### To split the dataset as 70% training and 30% testing, we will use 'set.seed' function to keep the reproducibility. 
+
+```{r}
+smp_size <- floor(0.70 * nrow(Default))
+
+set.seed(123)
+train_ind <- sample(seq_len(nrow(Default)), size = smp_size)
+
+train <- Default[train_ind, ]
+test <- Default[-train_ind, ]
+
+```
+
+#### We now need to introduce new variables for new labels as per our k-values.
+
+```{r}
+test$nlabel_k7 <- as.factor(c(1,0)) #results for k=7
+test$nlabel_k11 <- as.factor(c(1,0)) #results for k=11
+test$nlabel_k15 <- as.factor(c(1,0)) #results for k=15
+
+```
+
+#### We will now find new labels using KNN technique. That is, first find nearest k-points for the test datapoints and then assign new label as per voting.
+
+#####a) For k=7
+
+```{r}
+for(i in 1:nrow(test))
+{
+  #First we need to calculate distance for each test data point.
+  dist <- sqrt((test$income[i]-train$income)^2+(test$balance[i]-train$balance)^2)
+  
+  ind <- which(dist %in% sort(dist)[1:7]) #finding index of k-nearest points
+  labels <- train$default[ind] #Getting labels of nearest points
+  test$nlabel_k7[i] <- labels[which.max(labels)] #Selecting the top from voting
+}
+
+#Now we will calculate error
+
+error_k7 <- sum(as.numeric(test$default!=test$nlabel_k7))/nrow(test)
+cat(error_k7)
+```
+
+#####b) For k=11
+
+```{r}
+for(i in 1:nrow(test))
+{
+  #First we need to calculate distance for each test data point.
+  dist <- sqrt((test$income[i]-train$income)^2+(test$balance[i]-train$balance)^2)
+  
+  ind <- which(dist %in% sort(dist)[1:11]) #finding index of k-nearest points
+  labels <- train$default[ind] #Getting labels of nearest points
+  test$nlabel_k11[i] <- labels[which.max(labels)] #Selecting the top from voting
+}
+
+#Now we will calculate error
+
+error_k11 <- sum(as.numeric(test$default!=test$nlabel_k11))/nrow(test)
+cat(error_k11)
+```
+
+#####c) For k=15
+
+```{r}
+for(i in 1:nrow(test))
+{
+  #First we need to calculate distance for each test data point.
+  dist <- sqrt((test$income[i]-train$income)^2+(test$balance[i]-train$balance)^2)
+  
+  ind <- which(dist %in% sort(dist)[1:15]) #finding index of k-nearest points
+  labels <- train$default[ind] #Getting labels of nearest points
+  test$nlabel_k11[i] <- labels[which.max(labels)] #Selecting the top from voting
+}
+
+#Now we will calculate error
+
+error_k15 <- sum(as.numeric(test$default!=test$nlabel_k15))/nrow(test)
+cat(error_k15)
+```
+
