@@ -1,0 +1,103 @@
+---
+title: "Solving Linear Regression Equations"
+author: "Nouman Riaz"
+date: "September 29, 2016"
+output: pdf_document
+---
+
+The objective to find 'Beta' parameters of Linear Regression equation for both Simple and Multiple Linear Regression techniques.
+
+###Part 01 - Simple Linear Regression
+
+The dataset we are using is advertisment dataset from the ISLR website.
+
+```{r}
+ads <- read.csv("E:/PhD/Pattern Recognition/Assigment 01/Advertising.csv", stringsAsFactors=FALSE)
+head(ads, n=5) #Observing few dataset entries
+```
+
+Now we got to find parameters of two linear equations:
+
+1. Sales ~ Radio
+2. Sales ~ Newspaper
+
+```{r, fig.width=6, fig.height=3.7}
+#Visualizing these input variables agains the output
+plot(ads$Radio, ads$Sales)
+plot(ads$Newspaper, ads$Sales)
+
+```
+
+Now solving the following equations to estimate our Beta Values
+
+$$\beta_1 =\frac{\sum_{i=1}^n (x_i - x^-)(y_i - y^-)}{\sum_{i=1}^n (x_i - x^-)^2}$$
+
+$$\beta_0 = y^- - \beta_1 x^-$$
+
+1. Sales ~ Radio
+
+```{r}
+
+x_bar = sum(ads$Radio)/length(ads$Radio) #Calculating xbar, i.e. mean of x
+y_bar = sum(ads$Sales)/length(ads$Sales) #Calculating ybar, i.e. mean of y
+
+t = ads$Radio - x_bar #Solving numerator of the equation
+s = ads$Sales - y_bar #Solving denominator of the equation
+
+beta_1 <- sum(t*s)/sum(t*t) #Calculating Beta1
+beta_0 <- y_bar - (beta_1 * x_bar) #Calculating Beta0
+
+cat(sprintf("Beta_one = %s\n",beta_1))
+cat(sprintf("Beta_zero = %s",beta_0))
+
+```
+
+Now calculating $\beta$ values for second variable
+
+2. Sales ~ Newspaper
+```{r}
+x_bar = sum(ads$Newspaper)/length(ads$Newspaper) #Calculating xbar, i.e. mean of x
+y_bar = sum(ads$Sales)/length(ads$Sales)#Calculating ybar, i.e. mean of y
+
+t = ads$Newspaper - x_bar #Solving numerator of the equation
+s = ads$Sales - y_bar #Solving denominator of the equation
+
+beta_1 <- sum(t*s)/sum(t*t) #Calculating Beta1
+beta_0 <- y_bar - (beta_1 * x_bar) #Calculating Beta0
+
+cat(sprintf("Beta_one = %s\n",beta_1))
+cat(sprintf("Beta_zero = %s",beta_0))
+
+
+```
+
+###Part 02 - Multiple Linear Regression
+
+i.e. Sales ~ TV+Radio+Newspaper
+
+```{r}
+library(MASS)
+X <- matrix(c(seq(from=1,to=1,length.out = nrow(ads)),ads$TV,ads$Radio,ads$Newspaper), nrow=nrow(ads), ncol=4) #Constructing input matrix
+Xt <- t(X) #Taking transpose of input matrix
+y <- ads$Sales #Output variable
+
+a <- Xt %*% X #Multiplaying input matrix with its transpose
+b <- Xt %*% y #Multiplaying input matrix with output variable
+inv <- ginv(a) #Taking inverse
+BetaV <- inv %*% b #Caculating Beta vector
+cat(BetaV)
+
+
+
+```
+
+Verifying
+
+```{r}
+model <- lm(formula=Sales~TV+Radio+Newspaper,data=ads)
+summary(model)
+
+```
+
+We can see that the 'Estimate' parameter of our Model is exactly same as our calculated Beta values.
+
