@@ -5,14 +5,14 @@ date: "September 29, 2016"
 output: pdf_document
 ---
 
-The objective to find 'Beta' parameters of Linear Regression equation for both Simple and Multiple Linear Regression techniques.
+The objective is to find 'Beta' parameters of Linear Regression equation for both Simple and Multiple Linear Regression techniques.
 
 ###Part 01 - Simple Linear Regression
 
 The dataset we are using is advertisment dataset from the ISLR website.
 
 ```{r}
-ads <- read.csv("E:/PhD/Pattern Recognition/Assigment 01/Advertising.csv", stringsAsFactors=FALSE)
+ads <- read.csv("Advertising.csv", stringsAsFactors=FALSE)
 head(ads, n=5) #Observing few dataset entries
 ```
 
