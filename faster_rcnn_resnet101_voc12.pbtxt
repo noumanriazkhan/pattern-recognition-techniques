@@ -126,6 +126,7 @@ train_input_reader: {
 
 eval_config: {
   num_examples: 4952
+  metrics_set='pascal_voc_detection_metrics'
 }
 
 eval_input_reader: {
