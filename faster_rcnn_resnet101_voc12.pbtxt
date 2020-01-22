@@ -108,9 +108,9 @@ train_config: {
     use_moving_average: false
   }
   gradient_clipping_by_norm: 10.0
-  fine_tune_checkpoint: "../../vocmodels/faster_rcnn_resnet101_coco_2018_01_28/model.ckpt"
-  from_detection_checkpoint: true
-  num_steps: 1000
+  fine_tune_checkpoint: "../../resnet_v1_101.ckpt"
+  from_detection_checkpoint: false
+  num_steps: 500000
   data_augmentation_options {
     random_horizontal_flip {
     }
@@ -125,9 +125,12 @@ train_input_reader: {
 }
 
 eval_config: {
-  num_examples: 4952
+  num_examples: 10
+  num_visualizations: 10
   metrics_set: "pascal_voc_detection_metrics"
-  include_metrics_per_category: true
+  include_metrics_per_category: false
+  visualization_export_dir: "../../eval_results/visualizations/"
+  export_path: "../../eval_results/bboxes/"
 }
 
 eval_input_reader: {
