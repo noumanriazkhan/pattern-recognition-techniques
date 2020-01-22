@@ -110,7 +110,7 @@ train_config: {
   gradient_clipping_by_norm: 10.0
   fine_tune_checkpoint: "../../resnet_v1_101.ckpt"
   from_detection_checkpoint: false
-  num_steps: 500000
+  num_steps: 50000
   data_augmentation_options {
     random_horizontal_flip {
     }
@@ -125,8 +125,8 @@ train_input_reader: {
 }
 
 eval_config: {
-  num_examples: 10
-  num_visualizations: 10
+  num_examples: 4952
+  num_visualizations: 4952
   metrics_set: "pascal_voc_detection_metrics"
   include_metrics_per_category: false
   visualization_export_dir: "../../eval_results/visualizations/"
